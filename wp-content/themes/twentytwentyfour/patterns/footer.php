@@ -135,7 +135,8 @@
 <!-- Footer -->
 	<section id="footer">
 		<div class="container">
-
+<?php get_template_part( 'template-parts/footer-menus-widgets' ); ?>
+		
 			<div class="row">
 				<div class="col-xs-12 col-sm-12 col-md-12 mt-2 mt-sm-5">
 					<ul class="list-unstyled list-inline social text-center">
