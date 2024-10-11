@@ -1,43 +1,30 @@
 <?php
-// Lấy 5 bài viết mới nhất
-$recent_posts = wp_get_recent_posts([
-    'numberposts' => 5,
-    'post_status' => 'publish'
-]);
+global $wpdb;
+$table_name = $wpdb->prefix . 'footer_links';
+
+// Lấy tất cả các liên kết từ cơ sở dữ liệu
+$footer_links = $wpdb->get_results("SELECT * FROM $table_name");
+
+// Nhóm liên kết vào ba cột
+$links_per_column = array_chunk($footer_links, ceil(count($footer_links) / 3));
 ?>
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <h5>Bài viết</h5>
-            <ul>
-                <?php foreach ($recent_posts as $post): ?>
-                    <li><a href="<?php echo esc_url(get_permalink($post['ID'])); ?>"><?php echo esc_html($post['post_title']); ?></a></li>
+
+<div class="row text-center text-xs-center text-sm-left text-md-left">
+    <?php for ($i = 0; $i < 3; $i++): ?>
+        <div class="col-xs-12 col-sm-4 col-md-4">
+            <h5>Quick links</h5>
+            <ul class="list-unstyled quick-links">
+                <?php foreach ($links_per_column as $column): ?>
+                    <?php foreach ($column as $link): ?>
+                        <li>
+                            <a href="<?php echo esc_url($link->url); ?>">
+                                <i class="<?php echo esc_attr($link->icon_class); ?>"></i>
+                                <?php echo esc_html($link->title); ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
                 <?php endforeach; ?>
             </ul>
         </div>
-        <div class="col">
-            <h5>Danh mục</h5>
-            <ul>
-                <?php
-                // Lấy 5 danh mục mới nhất
-                $terms = get_terms([
-                    'taxonomy' => 'category',
-                    'orderby' => 'id',
-                    'order' => 'DESC',
-                    'number' => 5
-                ]);
-
-                if (!empty($terms) && !is_wp_error($terms)):
-                    foreach ($terms as $term):
-                ?>
-                    <li><a href="<?php echo esc_url(get_term_link($term)); ?>"><?php echo esc_html($term->name); ?></a></li>
-                <?php
-                    endforeach;
-                else:
-                ?>
-                    <li>No terms found.</li>
-                <?php endif; ?>
-            </ul>
-        </div>
-    </div>
+    <?php endfor; ?>
 </div>
