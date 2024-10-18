@@ -1,5 +1,4 @@
 
-
 CREATE TABLE wp_footer_links (
     id INT(11) AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
