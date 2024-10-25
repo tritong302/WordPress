@@ -12,83 +12,112 @@
  */
 
 ?>
+ <?php
+  $class = '';
+  if (!is_single()) {
+	$class = 'danh-sach';
+  }
+?>
+<article <?php post_class('two-column-layout'); ?> id="post-<?php the_ID(); ?>">
+    <div class="post-left-column">
+        <div class="post-date">
+            <span class="day"><?php echo get_the_date('d'); ?></span>
+            <span class="month"><?php echo get_the_date('F'); ?></span>
+        </div>
+    </div>
 
-<article <?php post_class(); ?> id="post-<?php the_ID(); ?>">
+    <div class="post-right-column">
+        <?php get_template_part( 'template-parts/entry-header' ); ?>
 
-	<?php
+        <div class="post-inner <?php echo is_page_template( 'templates/template-full-width.php' ) ? '' : 'thin'; ?> ">
+            <div class="entry-content">
+                <?php
+                if ( ! is_singular() ) {
+                    // Trích xuất 200 ký tự từ bài viết
+                    $excerpt = wp_trim_words( get_the_content(), 50, '...' );
+                    echo '<p>' . $excerpt . '</p>';
+                } else {
+                    the_content( __( 'Continue reading', 'twentytwenty' ) );
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+</article>
+<!-- .post -->
+ <style>
+	.two-column-layout {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 30px;
+}
 
-	get_template_part( 'template-parts/entry-header' );
+.post-left-column {
+    flex: 0 0 15%;
+    text-align: center;
+	display: flex;
+    justify-content: end;
+    margin-left: 13%;
+    margin-top: 2%;
+    border-right: 1px solid;
+    padding: 45px;
+}
 
-	if ( ! is_search() ) {
-		get_template_part( 'template-parts/featured-image' );
-	}
+.post-right-column {
+    flex: 1;
+    padding-left: 20px;
+}
 
-	?>
+.post-date {
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 1.2;
+    position: relative;
+    transform: translateY(-35px);
+}
 
-	<div class="post-inner <?php echo is_page_template( 'templates/template-full-width.php' ) ? '' : 'thin'; ?> ">
+.post-date .day {
+    display: block;
+    font-size: 50px;
+    color: #333;
+}
 
-		<div class="entry-content">
+.post-date .month {
+    display: block;
+    font-size: 18px;
+    color: #7c7373bf;
+	font-weight: 450;
+}
 
-			<?php
-			if ( is_search() || ! is_singular() && 'summary' === get_theme_mod( 'blog_content', 'full' ) ) {
-				the_excerpt();
-			} else {
-				the_content( __( 'Continue reading', 'twentytwenty' ) );
-			}
-			?>
-
-		</div><!-- .entry-content -->
-
-	</div><!-- .post-inner -->
-
-	<div class="section-inner">
-		<?php
-		wp_link_pages(
-			array(
-				'before'      => '<nav class="post-nav-links bg-light-background" aria-label="' . esc_attr__( 'Page', 'twentytwenty' ) . '"><span class="label">' . __( 'Pages:', 'twentytwenty' ) . '</span>',
-				'after'       => '</nav>',
-				'link_before' => '<span class="page-number">',
-				'link_after'  => '</span>',
-			)
-		);
-
-		edit_post_link();
-
-		// Single bottom post meta.
-		twentytwenty_the_post_meta( get_the_ID(), 'single-bottom' );
-
-		if ( post_type_supports( get_post_type( get_the_ID() ), 'author' ) && is_single() ) {
-
-			get_template_part( 'template-parts/entry-author-bio' );
-
-		}
-		?>
-
-	</div><!-- .section-inner -->
-
-	<?php
-
-	if ( is_single() ) {
-
-		get_template_part( 'template-parts/navigation' );
-
-	}
-
-	/*
-	 * Output comments wrapper if it's a post, or if comments are open,
-	 * or if there's a comment number – and check for password.
-	 */
-	if ( ( is_single() || is_page() ) && ( comments_open() || get_comments_number() ) && ! post_password_required() ) {
-		?>
-
-		<div class="comments-wrapper section-inner">
-
-			<?php comments_template(); ?>
-
-		</div><!-- .comments-wrapper -->
-
-		<?php
-	}
-	?>
-
-</article><!-- .post -->
+.entry-content p {
+    margin-top: 0;
+    font-size: 14px;
+    color: #555;
+	position: relative;
+	transform: translateY(-50px);
+}
+.entry-categories-inner {
+	display: none;
+}
+.entry-title {
+	position: relative;
+	top: 8px;
+	text-align: left;
+	font-size: 35px !important;
+	display: flex;
+    flex-direction: row;
+	transform: translateX(-22px);
+	
+}
+#site-content {
+	background-color: #fff !important;
+}
+.post-inner {
+    display: flex;  /* Sử dụng flex để canh thẳng hàng nội dung */
+    flex-direction: row; 
+}
+.entry-title a {
+	color: #3184fa !important;
+	
+}
+</style>
